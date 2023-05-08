@@ -337,7 +337,12 @@ resource "aws_instance" "ignore_ami" {
 ################################################################################
 # Spot Instance
 ################################################################################
-
+resource "aws_ec2_tag" "spot" {
+  for_each    =  local.create && var.create_spot_instance ? var.tags : []
+  resource_id = aws_spot_instance_request.this[0].spot_instance_id
+  key         = each.key
+  value       = each.value
+}
 resource "aws_spot_instance_request" "this" {
   count = local.create && var.create_spot_instance ? 1 : 0
 
