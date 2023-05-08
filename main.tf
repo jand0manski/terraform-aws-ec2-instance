@@ -338,6 +338,7 @@ resource "aws_instance" "ignore_ami" {
 # Spot Instance
 ################################################################################
 resource "aws_ec2_tag" "spot" {
+  depends_on = [aws_spot_instance_request.this]
   for_each    =  local.create && var.create_spot_instance ? var.tags : {}
   resource_id = aws_spot_instance_request.this[0].spot_instance_id
   key         = each.key
