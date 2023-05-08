@@ -492,13 +492,6 @@ resource "aws_spot_instance_request" "this" {
   volume_tags = var.enable_volume_tags ? merge({ "Name" = var.name }, var.volume_tags) : null
 }
 
-
-resource "time_sleep" "wait_30_seconds_spot" {
-  for_each    =  local.create && var.create_spot_instance ? {"1":"1"} : {}
-  depends_on = [aws_spot_instance_request.this]
-  create_duration = "15s"
-}
-
 resource "aws_ec2_tag" "spot" {
   depends_on = [aws_spot_instance_request.this[0]]
   for_each    =  local.create && var.create_spot_instance ? var.tags : {}
