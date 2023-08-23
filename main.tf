@@ -170,6 +170,12 @@ resource "aws_instance" "this" {
   volume_tags = var.enable_volume_tags ? merge({ "Name" = var.name }, var.volume_tags) : null
 }
 
+resource "aws_eip" "static" {
+  count = local.create && !var.ignore_ami_changes && var.public_static_ip_enabled ? 1:0
+  instance = aws_instance.this[0].id
+  domain   = "vpc"
+}
+
 ################################################################################
 # Instance - Ignore AMI Changes
 ################################################################################
@@ -334,6 +340,11 @@ resource "aws_instance" "ignore_ami" {
   }
 }
 
+resource "aws_eip" "static_ignore" {
+  count = local.create && var.ignore_ami_changes && var.public_static_ip_enabled ? 1:0
+  instance = aws_instance.ignore_ami[0].id
+  domain   = "vpc"
+}
 ################################################################################
 # Spot Instance
 ################################################################################
