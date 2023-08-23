@@ -3,7 +3,10 @@ variable "create" {
   type        = bool
   default     = true
 }
-
+variable "public_static_ip_enabled" {
+  type        = bool
+  default     = false
+}
 variable "name" {
   description = "Name to be used on EC2 instance created"
   type        = string
