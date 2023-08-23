@@ -171,7 +171,8 @@ resource "aws_instance" "this" {
 }
 
 resource "aws_eip" "static" {
-  count = local.create && !var.ignore_ami_changes && var.public_static_ip_enabled ? 1:0
+
+  count = local.create && !var.ignore_ami_changes && !var.create_spot_instance && var.public_static_ip_enabled ? 1:0
   instance = aws_instance.this[0].id
   domain   = "vpc"
 }
@@ -341,7 +342,7 @@ resource "aws_instance" "ignore_ami" {
 }
 
 resource "aws_eip" "static_ignore" {
-  count = local.create && var.ignore_ami_changes && var.public_static_ip_enabled ? 1:0
+  count = local.create && var.ignore_ami_changes && !var.create_spot_instance && var.public_static_ip_enabled ? 1:0
   instance = aws_instance.ignore_ami[0].id
   domain   = "vpc"
 }
